@@ -23,7 +23,11 @@ dnl #
 dnl # Uncomment and edit the following line if your outgoing mail needs to
 dnl # be sent out through an external mail server:
 dnl #
-dnl define(`SMART_HOST', `<%= node['sendmail']['relay_host'] %>')dnl
+<% if node['sendmail']['relay_host'] %>
+define(`SMART_HOST', `<%= node['sendmail']['relay_host'] %>')dnl
+<% else %>
+dnl define(`SMART_HOST', `relay_host_name')dnl
+<% end %>
 dnl #
 define(`confDEF_USER_ID', ``8:12'')dnl
 dnl define(`confAUTO_REBUILD')dnl
@@ -113,7 +117,11 @@ FEATURE(`access_db', `hash -T<TMPF> -o /etc/mail/access.db')dnl
   dnl # 127.0.0.1 and not on any other network devices. Remove the loopback
   dnl # address restriction to accept email from the internet or intranet.
   dnl #
+<% if node['sendmail']['ipv4'] %>
   DAEMON_OPTIONS(`Port=smtp,Addr=127.0.0.1, Name=MTA')dnl
+<% else %>
+  dnl DAEMON_OPTIONS(`Port=smtp,Addr=127.0.0.1, Name=MTA')dnl
+<% end %>
   dnl #
   dnl # The following causes sendmail to additionally listen to port 587 for
   dnl # mail from MUAs that authenticate. Roaming users who can't reach their
@@ -136,11 +144,19 @@ FEATURE(`access_db', `hash -T<TMPF> -o /etc/mail/access.db')dnl
   dnl # The following causes sendmail to additionally listen on the IPv6 loopback
   dnl # device. Remove the loopback address restriction listen to the network.
   dnl #
+<% if node['sendmail']['ipv6'] %>
+  DAEMON_OPTIONS(`port=smtp,Addr=::1, Name=MTA-v6, Family=inet6')dnl
+<% else %>
   dnl DAEMON_OPTIONS(`port=smtp,Addr=::1, Name=MTA-v6, Family=inet6')dnl
+<% end %>
   dnl #
   dnl # enable both ipv6 and ipv4 in sendmail:
   dnl #
-  dnl DAEMON_OPTIONS(`Name=MTA-v4, Family=inet, Name=MTA-v6, Family=inet6')
+<% if node['sendmail']['ipv4'] && node['sendmail']['ipv6'] %>
+  DAEMON_OPTIONS(`Name=MTA-v4, Family=inet, Name=MTA-v6, Family=inet6')dnl
+<% else %>
+  dnl DAEMON_OPTIONS(`Name=MTA-v4, Family=inet, Name=MTA-v6, Family=inet6')dnl
+<% end %>
   dnl #
   dnl # We strongly recommend not accepting unresolvable domains if you want to
   dnl # protect yourself from spam. However, the laptop and users on computers

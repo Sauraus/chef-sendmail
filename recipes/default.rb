@@ -1,22 +1,28 @@
+unless node['sendmail']['ipv4'] && node['sendmail']['ipv6']
+  Chef::Log.error ("You must set ['sendmail']['ipv4'] or ['sendmail']['ipv6'] to true, default for\
+                   ['sendmail']['ipv4'] is true your system overriding this!!!")
+  return
+end
+
 package 'sendmail' do
 	action :install
 end
 
+package 'sendmail-cf' do
+  action :install
+end
+
+template '/etc/mail/sendmail.mc' do
+  source 'sendmail.mc.erb'
+  notifies :restart, 'service[sendmail]', :delayed
+  notifies :run, 'execute[make sendmail]', :immediately
+end
+
+execute 'make sendmail' do
+  command '/etc/mail/make'
+  action :nothing
+end
+
 service 'sendmail' do
-	action [ :enable, :start ]
+  action [ :enable, :start ]
 end
-
-template "/etc/mail/sendmail.cf" do
- 	source    "sendmail.cf.erb"
- 	notifies  :restart,"service[sendmail]", :delayed
-end
-
-template "/etc/mail/sendmail.mc" do
-  source    "sendmail.mc.erb"
-  notifies  :restart,"service[sendmail]", :delayed
-end
-
-# template "/etc/mail/relay-domains" do
-# 	source "relay-domains"
-# 	notifies :restart,"service[sendmail]"
-# end

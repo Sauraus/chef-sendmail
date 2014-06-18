@@ -14,6 +14,10 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :chef_solo do |chef|
     chef.json = {
+        'sendmail' => {
+            'relay_host' => 'mail.example.com',
+            'mydomain' => 'example.com'
+        }
     }
 
     chef.run_list = [
