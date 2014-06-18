@@ -173,7 +173,11 @@ FEATURE(`access_db', `hash -T<TMPF> -o /etc/mail/access.db')dnl
   dnl # The following example makes mail from this host and any additional
   dnl # specified domains appear to be sent from mydomain.com
   dnl #
+<% if node['sendmail']['mydomain'] %>
+  MASQUERADE_AS(`<%= node['sendmail']['mydomain'] %>')dnl
+<% else %>
   dnl MASQUERADE_AS(`mydomain.com')dnl
+<% end %>
   dnl #
   dnl # masquerade not just the headers, but the envelope as well
   dnl #
