@@ -94,7 +94,7 @@ Fw/etc/mail/local-host-names
 CP.
 
 # "Smart" relay host (may be null)
-DS
+DS <%= node['sendmail']['relay_host'] %>
 
 
 # operators that cannot be in local usernames (i.e., network indicators)
