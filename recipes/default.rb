@@ -8,11 +8,10 @@ service 'sendmail' do
 end
 
 
-# template "/etc/mail/sendmail.cf" do
-# 	source    "sendmail.cf.erb"
-# 	notifies  :restart,"service[sendmail]"
-# 	variables( { :relay_host => node['smtp_relay_host'] } )
-# end
+template "/etc/mail/sendmail.cf" do
+ 	source    "sendmail.cf.erb"
+ 	notifies  :restart,"service[sendmail]"
+end
 
 
 # template "/etc/mail/relay-domains" do
