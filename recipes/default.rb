@@ -1,6 +1,6 @@
-unless node['sendmail']['ipv4'] && node['sendmail']['ipv6']
+unless node['sendmail']['ipv4'] || node['sendmail']['ipv6']
   Chef::Log.error ("You must set ['sendmail']['ipv4'] or ['sendmail']['ipv6'] to true, default for\
-                   ['sendmail']['ipv4'] is true your system overriding this!!!")
+ ['sendmail']['ipv4'] is true your system overriding this!!!")
   return
 end
 
