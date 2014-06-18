@@ -14,10 +14,10 @@ end
 
 template '/etc/mail/sendmail.mc' do
   source 'sendmail.mc.erb'
-  notifies :run, 'execute[make sendmail]', :immediately
+  notifies :run, 'execute[make sendmail config]', :immediately
 end
 
-execute 'make sendmail' do
+execute 'make sendmail config' do
   command '/etc/mail/make'
   action :nothing
   notifies :restart, 'service[sendmail]', :delayed
