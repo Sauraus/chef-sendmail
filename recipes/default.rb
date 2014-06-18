@@ -20,7 +20,7 @@ end
 execute 'make sendmail' do
   command '/etc/mail/make'
   action :nothing
-  notifies :restart, 'service[sendmail]', :immediately
+  notifies :restart, 'service[sendmail]', :delayed
 end
 
 service 'sendmail' do
